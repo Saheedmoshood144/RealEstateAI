@@ -6,6 +6,8 @@ import pandas as pd
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
 
+from src.conversation.schemas import ChatRequest, ChatResponse
+from src.conversation.service import ConversationService
 from src.models.recommendation_engine import RecommendationEngine
 
 
@@ -203,6 +205,19 @@ print(
 
 
 # ============================================================
+# LOAD CONVERSATION SERVICE
+# ============================================================
+
+print("Loading conversation service...")
+
+conversation_service = ConversationService(
+    listings_path=LISTINGS_PATH
+)
+
+print("Conversation service loaded successfully.")
+
+
+# ============================================================
 # ROOT ENDPOINT
 # ============================================================
 
@@ -225,6 +240,10 @@ def home():
             "recommendation": {
                 "endpoint": "/recommend",
                 "listings": len(recommendation_engine.data),
+            },
+            "conversation": {
+                "endpoint": "/chat",
+                "status": "available",
             },
         },
     }
@@ -352,3 +371,25 @@ def recommend_properties(
         "count": len(recommendation_records),
         "recommendations": recommendation_records,
     }
+
+
+# ============================================================
+# CHAT ENDPOINT
+# ============================================================
+
+@app.post("/chat", response_model=ChatResponse)
+def chat(request: ChatRequest):
+    """
+    Process a natural-language real-estate request.
+    """
+
+    result = conversation_service.process_message(
+        request.message,
+        session_id=request.session_id,
+    )
+
+    return ChatResponse(
+        intent=result["intent"],
+        message=result["message"],
+        data=result.get("data"),
+    )
