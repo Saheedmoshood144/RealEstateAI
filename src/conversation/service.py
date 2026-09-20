@@ -86,7 +86,7 @@ class ConversationService:
     def process_message(
         self,
         message: str,
-        session_id: str = "default",
+        session_id: str | None = None,
     ) -> dict[str, Any]:
         """
         Process a user's conversational message.

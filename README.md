@@ -300,6 +300,10 @@ Property Details
 
 
 
+FastAPI Interactive Documentation
+
+
+
 📸 Example Conversation
 
 User:
@@ -478,8 +482,8 @@ RealEstateAI/
 │       ├── 01-gradio-home.png
 │       ├── 02-property-recommendation.png
 │       ├── 03-multiturn-conversation.png
-│       └── 04-property-detail.png
-│
+│       ├── 04-property-detail.png
+│       └── 05-fastapi-docs.png
 ├── src/
 │   ├── api/
 │   │   └── app.py
